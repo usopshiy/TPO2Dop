@@ -14,7 +14,7 @@ public class PersonServiceITest extends BaseIT {
     private PersonService service;
 
     @Test
-    void service_save_and_update() {
+    void serviceSaveAndUpdate() {
         Person created = service.create(Person.builder().age(18).name("Olga").build());
         assertThat(created.getId()).isNotNull();
 

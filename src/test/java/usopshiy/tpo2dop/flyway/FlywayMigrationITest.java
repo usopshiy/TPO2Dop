@@ -17,7 +17,7 @@ public class FlywayMigrationITest extends BaseIT {
     private DataSource dataSource;
 
     @Test
-    void migrate_and_clean_and_migrate_again() throws Exception {
+    void flywayCleanMigrate() throws Exception {
         Flyway flyway = Flyway.configure()
                 .dataSource(dataSource)
                 .locations("classpath:db/migration")
@@ -25,6 +25,12 @@ public class FlywayMigrationITest extends BaseIT {
                 .load();
 
         flyway.clean();
+
+        try (Connection conn = dataSource.getConnection()) {
+            ResultSet rs = conn.getMetaData().getTables(null, null, "person", null);
+            assertThat(rs.next()).isFalse();
+        }
+
         flyway.migrate();
 
         try (Connection conn = dataSource.getConnection()) {

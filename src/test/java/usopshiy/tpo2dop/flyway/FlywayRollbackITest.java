@@ -18,21 +18,13 @@ public class FlywayRollbackITest extends BaseIT {
 
     @Test
     void migrate_to_v1_then_forward_to_v2() throws Exception {
-        // 1. Чистим базу полностью
-        Flyway flywayClean = Flyway.configure()
-                .dataSource(dataSource)
-                .locations("classpath:db/migration")
-                .cleanDisabled(false)
-                .load();
-        flywayClean.clean();
-
-        // 2. Миграция только до V1
         Flyway flywayToV1 = Flyway.configure()
                 .dataSource(dataSource)
                 .locations("classpath:db/migration")
                 .target("1")
                 .cleanDisabled(false)
                 .load();
+        flywayToV1.clean();
         flywayToV1.migrate();
 
         try (Connection conn = dataSource.getConnection()) {
@@ -44,7 +36,6 @@ public class FlywayRollbackITest extends BaseIT {
             assertThat(hasIndex(conn, "person", "idx_person_name")).isFalse();
         }
 
-        // 3. Миграция до последней версии (V2)
         Flyway flywayToLatest = Flyway.configure()
                 .dataSource(dataSource)
                 .locations("classpath:db/migration")
@@ -53,7 +44,6 @@ public class FlywayRollbackITest extends BaseIT {
         flywayToLatest.migrate();
 
         try (Connection conn = dataSource.getConnection()) {
-            // Теперь индекс должен появиться
             assertThat(hasIndex(conn, "person", "idx_person_name")).isTrue();
         }
     }

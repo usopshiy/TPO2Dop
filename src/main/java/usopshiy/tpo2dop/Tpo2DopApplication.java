@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Tpo2DopApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(Tpo2DopApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(Tpo2DopApplication.class, args);
+    }
 
 }

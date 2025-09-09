@@ -1,5 +1,6 @@
 package usopshiy.tpo2dop.person;
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,18 @@ public class PersonRepositoryITest extends BaseIT {
     private PersonRepository repository;
 
     @Test
-    void crudOperations_work() {
+    @Transactional
+    @Order(1)
+    void findAllReturnsInserted() {
+        repository.save(Person.builder().age(20).name("Anna").build());
+        repository.save(Person.builder().age(22).name("Petr").build());
+        List<Person> all = repository.findAll();
+        assertThat(all).hasSizeGreaterThanOrEqualTo(2);
+    }
+
+    @Test
+    @Order(2)
+    void crudOperationsWork() {
         // Create
         Person saved = repository.save(Person.builder().age(30).name("Ivan").build());
         assertThat(saved.getId()).isNotNull();
@@ -35,14 +47,5 @@ public class PersonRepositoryITest extends BaseIT {
         // Delete
         repository.deleteById(saved.getId());
         assertThat(repository.findById(saved.getId())).isEmpty();
-    }
-
-    @Test
-    @Transactional
-    void findAll_returnsInserted() {
-        repository.save(Person.builder().age(20).name("Anna").build());
-        repository.save(Person.builder().age(22).name("Petr").build());
-        List<Person> all = repository.findAll();
-        assertThat(all).hasSizeGreaterThanOrEqualTo(2);
     }
 }
