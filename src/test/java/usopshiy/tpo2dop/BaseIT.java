@@ -5,7 +5,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import usopshiy.tpo2dop.testcontainers.PostgresTestContainer;
 
@@ -13,7 +12,6 @@ import usopshiy.tpo2dop.testcontainers.PostgresTestContainer;
 @Testcontainers
 @ActiveProfiles("test")
 public abstract class BaseIT {
-    @Container
     protected static final PostgresTestContainer POSTGRES = PostgresTestContainer.getInstance();
 
     @BeforeAll
